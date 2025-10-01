@@ -11,8 +11,13 @@ class MataKuliah extends Model
     protected $fillable = [
         'kode_mk',
         'nama_mk',
-        'jurusan'
+        'jurusan',
+        'dosenPengampu'
     ];
 
     protected $table = 'table_matakuliah';
+
+    public function Dosen() {
+        return $this->belongTo(Dosen::class, 'dosenPengampu');
+    }
 }

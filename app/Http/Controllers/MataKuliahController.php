@@ -12,6 +12,7 @@ class MataKuliahController extends Controller
      */
     public function index()
     {
+        $mata_kuliah = \App\Models\MataKuliah::with('dosen')->get();
         return view('IndexMataKuliah', ['matakuliah' => MataKuliah::all()]);
     }
 
@@ -20,7 +21,8 @@ class MataKuliahController extends Controller
      */
     public function create()
     {
-        return view('CreateMataKuliah');
+        $dosen = \App\Models\Dosen::all();
+        return view('CreateMataKuliah', compact('dosen'));
     }
 
     /**
@@ -29,9 +31,10 @@ class MataKuliahController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_mk' => 'required|unique:table_matakuliah',
-            'nama_mk' => 'required',
-            'jurusan' => 'required',
+            'kode_mk'       => 'required|unique:table_matakuliah',
+            'nama_mk'       => 'required',
+            'jurusan'       => 'required',
+            'dosenPengampu' => 'required'
         ]);
 
         \App\Models\MataKuliah::create($request->all());
@@ -51,8 +54,9 @@ class MataKuliahController extends Controller
      */
     public function edit($id)
     {
-        $matakuliah = MataKuliah::findOrFail($id);
-        return view('CreateMataKuliah', compact('matakuliah'));
+        $matakuliah = \App\Models\MataKuliah::findOrFail($id);
+        $dosen = \App\Models\Dosen::all();
+        return view('CreateMataKuliah', compact('matakuliah', 'dosen'));
     }
 
     /**
@@ -65,9 +69,12 @@ class MataKuliahController extends Controller
             'kode_mk'       => 'required|unique:table_matakuliah,kode_mk,' . $id,
             'nama_mk'       => 'required',
             'jurusan'       => 'required',
+            'dosenPengampu' => 'required|exists:table_dosen,id'
         ]);
 
+        $matakuliah = \App\Models\MataKuliah::findOrFail($id);
         $matakuliah->update($request->all());
+        
         return redirect('/matakuliah')->with('success','Data Mata Kuliah berhasil diperbarui.');
     }
 

@@ -46,6 +46,18 @@
             @endforeach
           </div>
 
+          <div class="mb-3">
+            <label for="dosenPengampu" class="form-label">Dosen Pengampu</label>
+            <select name="dosenPengampu" id="dosenPengampu" class="form-select" required>
+              <option value="">Pilih Dosen</option>
+              @foreach($dosen as $dsn)
+                <option value="{{ $dsn->id }}"
+                  {{ old('dosenPengampu', $isEdit ? $matakuliah->dosenPengampu: '') == $dsn->id ? 'selected' : '' }}>
+                  {{ $dsn->nama }}</option>
+              @endforeach
+            </select>
+          </div>
+
           <button type="submit" class="btn btn-primary">
                 {{ $isEdit ? 'Update' : 'Create' }}
           </button>
