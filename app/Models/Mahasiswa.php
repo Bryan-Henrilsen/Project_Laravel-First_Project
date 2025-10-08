@@ -15,8 +15,13 @@ class Mahasiswa extends Model
         'tempat_lahir',
         'tanggal_lahir',
         'jurusan',
+        'max_sks',
         'angkatan'
     ];
 
     protected $table = 'table_mahasiswa';
+
+    public function mataKuliah() {
+        return $this->belongsToMany(Mahasiswa::class, 'mahasiswa_matakuliah', 'mahasiswa_id', 'matakuliah_id');
+    }
 }

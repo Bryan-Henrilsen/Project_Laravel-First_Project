@@ -12,12 +12,17 @@ class MataKuliah extends Model
         'kode_mk',
         'nama_mk',
         'jurusan',
+        'sks',
         'dosenPengampu'
     ];
 
     protected $table = 'table_matakuliah';
 
-    public function Dosen() {
-        return $this->belongTo(Dosen::class, 'dosenPengampu');
+    public function dosen() {
+        return $this->belongsTo(Dosen::class, 'dosenPengampu');
+    }
+
+    public function mahasiswa() {
+        return $this->belongsToMany(Mahasiswa::class, 'mahasiswa_matakuliah', 'matakuliah_id', 'mahasiswa_id');
     }
 }
