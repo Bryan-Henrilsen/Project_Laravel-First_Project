@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2025 at 03:10 PM
+-- Generation Time: Oct 22, 2025 at 04:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -108,6 +108,19 @@ CREATE TABLE `mahasiswa_matakuliah` (
   `matakuliah_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `mahasiswa_matakuliah`
+--
+
+INSERT INTO `mahasiswa_matakuliah` (`id`, `mahasiswa_id`, `matakuliah_id`) VALUES
+(1, 5, 1),
+(2, 5, 3),
+(3, 5, 4),
+(4, 1, 1),
+(5, 1, 3),
+(6, 2, 1),
+(7, 2, 4);
+
 -- --------------------------------------------------------
 
 --
@@ -156,7 +169,8 @@ CREATE TABLE `table_dosen` (
 --
 
 INSERT INTO `table_dosen` (`id`, `nip`, `nama`, `jurusan`, `pendidikanTerakhir`) VALUES
-(1, '10001', 'Daniel Sihombing', 'Sistem dan Teknologi Informasi', 'S2');
+(1, '10001', 'Daniel Sihombing', 'Sistem dan Teknologi Informasi', 'S2'),
+(2, '10002', 'Eric Prakarsa', 'Sistem dan Teknologi Informasi', 'S2');
 
 -- --------------------------------------------------------
 
@@ -180,8 +194,9 @@ CREATE TABLE `table_mahasiswa` (
 --
 
 INSERT INTO `table_mahasiswa` (`id`, `NIM`, `name`, `tempat_lahir`, `tanggal_lahir`, `jurusan`, `max_sks`, `angkatan`) VALUES
-(1, '23110017', 'Bryan Henrilsen', 'Pontianak', '11 Maret 2005', 'Sistem dan Teknologi Informasi', 24, 2023),
-(2, '23110018', 'Brian Satria', 'Pontianak', '2006-03-21', 'Kewirausahaan', 24, 2024);
+(1, '23110017', 'Bryan Henrilsen', 'Pontianak', '2005-03-11', 'Sistem dan Teknologi Informasi', 24, 2023),
+(2, '23110018', 'Brian Satria', 'Pontianak', '2006-03-21', 'Sistem dan Teknologi Informasi', 24, 2024),
+(5, '23110019', 'Dhavid', 'Pontianak', '2004-05-23', 'Sistem dan Teknologi Informasi', 24, 2023);
 
 -- --------------------------------------------------------
 
@@ -203,7 +218,9 @@ CREATE TABLE `table_matakuliah` (
 --
 
 INSERT INTO `table_matakuliah` (`id`, `kode_mk`, `nama_mk`, `jurusan`, `sks`, `dosenPengampu`) VALUES
-(1, '2001', 'Pemograman Web Lanjutan', 'Sistem dan Teknologi Informasi', 0, 1);
+(1, '2001', 'Pemograman Web Lanjutan', 'Sistem dan Teknologi Informasi', 3, 2),
+(3, '2002', 'Data Sains 1', 'Sistem dan Teknologi Informasi', 3, 2),
+(4, '2003', 'Sistem Pengambilan Keputusan', 'Sistem dan Teknologi Informasi', 2, 1);
 
 --
 -- Indexes for dumped tables
@@ -297,7 +314,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `mahasiswa_matakuliah`
 --
 ALTER TABLE `mahasiswa_matakuliah`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -309,19 +326,19 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `table_dosen`
 --
 ALTER TABLE `table_dosen`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `table_mahasiswa`
 --
 ALTER TABLE `table_mahasiswa`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `table_matakuliah`
 --
 ALTER TABLE `table_matakuliah`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
