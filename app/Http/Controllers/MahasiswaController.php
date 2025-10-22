@@ -12,7 +12,8 @@ class MahasiswaController extends Controller
      */
     public function index()
     {
-        return view('IndexMahasiswa', ['mahasiswas' => Mahasiswa::all()]);
+        $mahasiswas = \App\Models\Mahasiswa::with('matakuliah')->get();
+        return view('IndexMahasiswa', compact('mahasiswas'));
     }
 
     /**
@@ -20,7 +21,8 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        return view('CreateMahasiswa');
+        $matakuliah = \App\Models\MataKuliah::all();
+        return view('CreateMahasiswa', compact('matakuliah'));
     }
 
     /**
@@ -34,12 +36,33 @@ class MahasiswaController extends Controller
             'tempat_lahir'  => 'required',
             'tanggal_lahir' => 'required',
             'jurusan'       => 'required',
-            'angkatan'       => 'required',
+            'angkatan'      => 'required',
+            'max_sks'       => 'required|numeric|min:1',
+            'matakuliah_id' => 'array', 
         ]);
 
-        \App\Models\Mahasiswa::create($request->all());
+        // Menghitung total SKS dari mata kuliah yang dipilih
+        $totalSks = 0;
+        if($request->has('matakuliah_id')) {
+            $totalSks = \App\Models\MataKuliah::whereIn('id', $request->matakuliah_id)->sum('sks');
+        }
+        
+        // Validasi apakah total sks melebih max sks
+        if($totalSks > $request->max_sks) {
+            return back()
+            ->withErrors(['matakuliah_id' => 'Total SKS yang diambil (' . $totalSks . ') melebihi batas maksimum (' . $request->max_sks . ')'])
+            ->withInput();
+        }
 
-        return redirect('/mahasiswa')->with('success', 'Mahasiswa Berhasil Ditambahkan');
+        // Simpan Data Mahasiswa tanpa mata kuliah
+        $mahasiswa = \App\Models\Mahasiswa::create($request->except('matakuliah_id'));
+
+        // Simpan relasi many-to-many
+        if($request->has('matakuliah_id')) {
+            $mahasiswa->matakuliah()->attach($request->matakuliah_id);
+        }
+
+        return redirect('/mahasiswa')->with('success', 'Mahasiswa dan Mata Kuliah Berhasil Ditambahkan');
     }
 
     /**
@@ -55,8 +78,10 @@ class MahasiswaController extends Controller
      */
     public function edit($id)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-        return view('CreateMahasiswa', compact('mahasiswa'));
+        $mahasiswa = \App\Models\Mahasiswa::findOrFail($id);
+        $matakuliah = \App\Models\MataKuliah::all();
+
+        return view('CreateMahasiswa', compact('mahasiswa', 'matakuliah'));
     }
 
     /**
@@ -64,7 +89,8 @@ class MahasiswaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa = \App\Models\Mahasiswa::findOrFail($id);
+
         $request->validate([
             'NIM'           => 'required|unique:table_mahasiswa,NIM,' . $id,
             'name'          => 'required',
@@ -72,9 +98,40 @@ class MahasiswaController extends Controller
             'tanggal_lahir' => 'required',
             'jurusan'       => 'required',
             'angkatan'      => 'required',
+            'max_sks'       => 'required|integer|min:1',
+            'matakuliah_id' => 'required|array',
         ]);
 
-        $mahasiswa->update($request->all());
+        // Hitung total sks berdasarkan mata kuliah yang dipilih
+        $totalSks = 0;
+        if($request->has('matakuliah_id')) {
+            $totalSks = \App\Models\MataKuliah::whereIn('id', $request->matakuliah_id)->sum('sks');
+        }
+        
+        // Validasi apakah total sks melebihi max sks
+        if($totalSks > $request->max_sks) {
+            return back()
+            ->withErrors(['matakuliah_id' => 'Total SKS yang diambil (' . $totalSks . ') melebihi batas maksimum (' . $request->max_sks . ')'])
+            ->withInput();
+        }
+
+        $mahasiswa->update([
+            'NIM'           => $request->NIM,
+            'name'          => $request->name,
+            'tempat_lahir'  => $request->tempat_lahir,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jurusan'       => $request->jurusan,
+            'angkatan'      => $request->angkatan,
+            'max_sks'       => $request->max_sks,
+        ]);
+        
+        // Update relasi many-to-many (sinkronisasi matakuliah)
+        if($request->has('matakuliah_id')) {
+            $mahasiswa->matakuliah()->sync($request->matakuliah_id);
+        } else {
+            $mahasiswa->matakuliah()->detach();
+        }
+
         return redirect('/mahasiswa')->with('success','Data Mahasiswa berhasil diperbarui.');
     }
 

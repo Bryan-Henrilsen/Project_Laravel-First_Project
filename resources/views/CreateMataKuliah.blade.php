@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Mata Kuliah</title>
+  <title>{{ isset($matakuliah) ? 'Edit' : 'Create' }} Mata Kuliah</title>
   @vite(['resources/js/app.js'])
 </head>
 <body class="bg-light">
   <div class="container mt-5">
     <div class="card shadow-lg">
       <div class="card-header bg-primary text-white">
-        <h2 class="mb-0">Create Mata Kuliah</h2>
+        <h2 class="mb-0">{{ isset($matakuliah) ? 'Edit Mata Kuliah' : 'Create Mata Kuliah' }}</h2>
       </div>
       <div class="card-body">
         @php
@@ -56,6 +56,12 @@
                   {{ $dsn->nama }}</option>
               @endforeach
             </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="sks" class="form-label">Bobot SKS</label>
+            <input type="number" name="sks" id="sks" class="form-control" min="1"
+                  value="{{ old('sks', $isEdit ? $matakuliah->sks : '') }}" required>
           </div>
 
           <button type="submit" class="btn btn-primary">

@@ -9,7 +9,6 @@
 <body class="bg-light">
 
   <div class="container py-5">
-    <!-- Judul dan tombol -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="fw-bold text-primary">Daftar Mahasiswa</h2>
       <a href="{{ route('mahasiswa.create') }}" class="btn btn-success">
@@ -17,7 +16,6 @@
       </a>
     </div>
 
-    <!-- Kartu Tabel -->
     <div class="card shadow">
       <div class="card-body">
         <div class="table-responsive">
@@ -31,6 +29,8 @@
                 <th>Tanggal Lahir</th>
                 <th>Jurusan</th>
                 <th>Angkatan</th>
+                <th>Total SKS</th>
+                <th>List Mata Kuliah</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -44,6 +44,19 @@
                 <td>{{ $mahasiswa['tanggal_lahir'] }}</td>
                 <td>{{ $mahasiswa['jurusan'] }}</td>
                 <td>{{ $mahasiswa['angkatan'] }}</td>
+                <td>{{ $mahasiswa->matakuliah->sum('sks') }}</td>
+                <td>
+                  @if($mahasiswa->matakuliah->isNotEmpty())
+                    <ul class="mb-0">
+                      @foreach($mahasiswa->matakuliah as $mk)
+                        <li>{{ $mk->nama_mk }} ({{ $mk->sks }} SKS)</li>
+                      @endforeach
+                    </ul>
+                  @else
+                    <span class="text-muted">Belum mengambil mata kuliah</span>
+                  @endif
+                </td>
+                
                 <td>
                   <div class="btn-group" role="group">
                     <a href="{{ route('mahasiswa.edit', $mahasiswa->id) }}" class="btn btn-sm btn-primary">Edit</a>

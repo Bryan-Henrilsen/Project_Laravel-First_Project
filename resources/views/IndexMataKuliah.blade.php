@@ -29,17 +29,19 @@
                 <th>Nama Mata Kuliah</th>
                 <th>Jurusan</th>
                 <th>Dosen Pengampu</th>
+                <th>Bobot SKS</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              @forelse ($matakuliah as $index => $matkul)
+              @forelse ($matakuliah as $matkul)
               <tr>
-                <td>{{ $matkul['id'] }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ $matkul['kode_mk'] }}</td>
                 <td>{{ $matkul['nama_mk'] }}</td>
                 <td>{{ $matkul['jurusan'] }}</td>
                 <td>{{ $matkul->dosen ? $matkul->dosen->nama : '-' }}</td>
+                <td>{{ $matkul->sks ?? '-' }}</td>
                 <td>
                   <div class="btn-group" role="group">
                     <a href="{{ route('matakuliah.edit', $matkul->id) }}" class="btn btn-sm btn-primary">Edit</a>

@@ -34,7 +34,8 @@ class MataKuliahController extends Controller
             'kode_mk'       => 'required|unique:table_matakuliah',
             'nama_mk'       => 'required',
             'jurusan'       => 'required',
-            'dosenPengampu' => 'required'
+            'dosenPengampu' => 'required',
+            'sks'           => 'required|integer|min:1|max:6',
         ]);
 
         \App\Models\MataKuliah::create($request->all());
@@ -69,7 +70,8 @@ class MataKuliahController extends Controller
             'kode_mk'       => 'required|unique:table_matakuliah,kode_mk,' . $id,
             'nama_mk'       => 'required',
             'jurusan'       => 'required',
-            'dosenPengampu' => 'required|exists:table_dosen,id'
+            'dosenPengampu' => 'required|exists:table_dosen,id',
+            'sks'           => 'required|integer|min:1|max:6'
         ]);
 
         $matakuliah = \App\Models\MataKuliah::findOrFail($id);

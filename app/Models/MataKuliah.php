@@ -25,4 +25,6 @@ class MataKuliah extends Model
     public function mahasiswa() {
         return $this->belongsToMany(Mahasiswa::class, 'mahasiswa_matakuliah', 'matakuliah_id', 'mahasiswa_id');
     }
+
+    // belongsToMany(TargetModel::class, 'pivot_table', 'foreign_key_this_model', 'foreign_key_other_model')
 }
